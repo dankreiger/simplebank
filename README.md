@@ -4,9 +4,6 @@
   - [Prerequisites](#prerequisites)
   - [Tools](#tools)
   - [Targets in the Makefile](#targets-in-the-makefile)
-    - [postgres](#postgres)
-    - [createdb](#createdb)
-    - [dropdb](#dropdb)
   - [Usage](#usage)
   - [Note on Makefile](#note-on-makefile)
   - [Go type generation](#go-type-generation)
@@ -32,24 +29,28 @@ In addition to the Makefile, the following tools can be used to manage and visua
 
 ## Targets in the Makefile
 
-The following targets are defined in the Makefile:
+This Makefile contains the following targets for running and managing the Simple Bank application:
 
-### postgres
+- `postgres`: Runs a PostgreSQL container named `postgres15-1` with the following options:
 
-This target runs a PostgreSQL container named `postgres15-1` with the following options:
+  - Port mapping `5432:5432`
+  - Environment variable `POSTGRES_USER` set to `root`
+  - Environment variable `POSTGRES_PASSWORD` set to `secret`
+  - Using the image `postgres:15.1-alpine`
 
-- Port mapping `5432:5432`
-- Environment variable `POSTGRES_USER` set to `root`
-- Environment variable `POSTGRES_PASSWORD` set to `secret`
-- Using the image `postgres:15.1-alpine`
+- `createdb`: Creates a database named `simple_bank` using `docker exec`.
 
-### createdb
+- `dropdb`: Drops the database `simple_bank` using `docker exec`.
 
-This target creates a database named `simple_bank` in the `postgres15-1` container, using the `root` user and ownership.
+- `migrateup`: Runs the `migrate` tool to apply database migrations. The connection URL points to the `simple_bank` database on localhost with the specified credentials.
 
-### dropdb
+- `migratedown`: Runs the `migrate` tool to undo database migrations. The connection URL points to the `simple_bank` database on localhost with the specified credentials.
 
-This target drops the `simple_bank` database from the `postgres15-1` container.
+- `sqlc`: Runs the `sqlc` tool to generate Go code from SQL.
+
+- `test`: Runs Go tests for the application.
+
+The `.PHONY` target specifies that the above targets are not associated with files, so they will always run when invoked.
 
 ## Usage
 
