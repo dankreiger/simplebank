@@ -67,3 +67,34 @@ func TestListEntries(t *testing.T) {
 		require.Equal(t, arg.AccountID, entry.AccountID)
 	}
 }
+
+func TestDeleteEntry(t *testing.T) {
+	account := createRandomAccount(t)
+	entry1 := createRandomEntry(t, account)
+
+	err := testQueries.DeleteEntry(context.Background(), entry1.ID)
+	require.NoError(t, err)
+
+	entry2, err := testQueries.GetEntry(context.Background(), entry1.ID)
+	require.Error(t, err)
+	require.Empty(t, entry2)
+}
+
+func TestUpdateEntry(t *testing.T) {
+	account := createRandomAccount(t)
+	entry1 := createRandomEntry(t, account)
+
+	arg := UpdateEntryParams{
+		ID:     entry1.ID,
+		Amount: util.RandomMoney(),
+	}
+
+	entry2, err := testQueries.UpdateEntry(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, entry2)
+
+	require.Equal(t, entry1.ID, entry2.ID)
+	require.Equal(t, entry1.AccountID, entry2.AccountID)
+	require.Equal(t, arg.Amount, entry2.Amount)
+	require.WithinDuration(t, entry1.CreatedAt, entry2.CreatedAt, time.Second)
+}
