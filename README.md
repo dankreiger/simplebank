@@ -10,6 +10,7 @@
   - [Usage](#usage)
   - [Note on Makefile](#note-on-makefile)
   - [Go type generation](#go-type-generation)
+  - [Structure](#structure)
 
 This Makefile provides scripts for running and managing a PostgreSQL database using Docker.
 
@@ -69,3 +70,7 @@ The `sqlc` tool can be used to generate Go types from SQL queries. The `sqlc` to
 ```sh
 make sqlc
 ```
+
+## Structure
+
+![simple_bank](./simple_bank.png)
